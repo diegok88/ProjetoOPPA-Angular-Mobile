@@ -1,0 +1,168 @@
+<div class="alocacao">
+  <header class="alocacao-header">
+    @if (visao() !== 'inicial') {
+      <button type="button" class="icon-btn" (click)="voltar()" aria-label="Voltar">
+        <mat-icon fontSet="material-symbols-outlined">arrow_back</mat-icon>
+      </button>
+    }
+
+    <div class="alocacao-titulo">
+      <h2>Alocação Operacional</h2>
+
+      @switch (visao()) {
+        @case ('lista') {
+          <span>{{ tituloFiltro() }}</span>
+        }
+        @case ('detalhe') {
+          <span>Detalhes da alocação</span>
+        }
+      }
+    </div>
+  </header>
+
+  @switch (visao()) {
+    @case ('inicial') {
+      <section class="cartoes" aria-label="Resumo das alocações">
+        @for (cartao of cartoes; track cartao.chave) {
+          <button type="button" class="cartao" (click)="abrirFiltro(cartao.filtro)">
+            <div class="container-cartao">
+              <mat-icon class="cartao-icone" fontSet="material-symbols-outlined">
+                {{ cartao.icone }}
+              </mat-icon>
+              <span class="cartao-titulo">{{ cartao.titulo }}</span>
+            </div>
+            <div class="container-cartao">
+              <strong class="cartao-valor">{{ valorCartao(cartao) }}</strong>
+            </div>
+          </button>
+        }
+      </section>
+    }
+
+    @case ('lista') {
+      @if (carregando()) {
+        <div class="estado">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      } @else if (resultado().dados.length) {
+        <ul class="lista">
+          @for (item of resultado().dados; track $index) {
+            <li>
+              <button type="button" class="item" (click)="abrirDetalhe(item.id!)">
+                <div class="item-topo">
+                  <strong>{{ item?.codigo }}</strong>
+                  <span class="badge" [ngClass]="classeSituacao(item?.situacao)">
+                    {{ exibirSituacao(item?.situacao) }}
+                  </span>
+                </div>
+
+                <span class="item-linha">
+                  {{ item?.tagAtivo?.descricao }} - {{ item?.tagAtivo?.ativo?.descricao }}
+                </span>
+
+                <span class="item-linha secundaria">
+                  @if (item?.operador; as operador) {
+                    {{ operador.nome }} - {{ operador.cracha }}
+                  } @else {
+                    SEM ALOCAÇÃO
+                  }
+                </span>
+
+                <span class="item-badges">
+                  <span class="badge" [ngClass]="classeCondicao(item?.condicao)">
+                    {{ exibirCondicao(item?.condicao) }}
+                  </span>
+                </span>
+              </button>
+            </li>
+          }
+        </ul>
+
+        <nav class="paginacao" aria-label="Paginação">
+          <button
+            type="button"
+            (click)="irParaPagina(resultado().pagina - 1)"
+            [disabled]="!temPaginaAnterior()"
+          >
+            Anterior
+          </button>
+
+          <span>{{ resultado().pagina }} / {{ totalPaginas() }}</span>
+
+          <button
+            type="button"
+            (click)="irParaPagina(resultado().pagina + 1)"
+            [disabled]="!temProximaPagina()"
+          >
+            Próxima
+          </button>
+        </nav>
+      } @else {
+        <div class="estado vazio">
+          <img src="images/mystery.png" alt="" />
+          <span>Lista Vazia!</span>
+        </div>
+      }
+    }
+
+    @case ('detalhe') {
+      @if (carregando()) {
+        <div class="estado">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      } @else if (detalhe(); as dado) {
+        <dl class="detalhe">
+          <div>
+            <dt>Código:</dt>
+            <dd>{{ dado.codigo }}</dd>
+          </div>
+
+          <div>
+            <dt>Operador:</dt>
+            <dd>
+              @if (dado.operador; as operador) {
+                {{ operador.nome }} - {{ operador.cracha }}
+              } @else {
+                SEM ALOCAÇÃO
+              }
+            </dd>
+          </div>
+
+          <div>
+            <dt>Tag Ativo:</dt>
+            <dd>{{ dado.tagAtivo?.descricao }}</dd>
+          </div>
+
+          <div>
+            <dt>Ativo:</dt>
+            <dd>{{ dado.tagAtivo?.ativo?.descricao }}</dd>
+          </div>
+
+          <div>
+            <dt>Condição:</dt>
+            <dd>
+              <span class="badge" [ngClass]="classeCondicao(dado.condicao)">
+                {{ exibirCondicao(dado.condicao) }}
+              </span>
+            </dd>
+          </div>
+
+          <div>
+            <dt>Situação:</dt>
+            <dd>
+              <span class="badge" [ngClass]="classeSituacao(dado.situacao)">
+                {{ exibirSituacao(dado.situacao) }}
+              </span>
+            </dd>
+          </div>
+        </dl>
+
+        <p class="nota">Somente visualização</p>
+      } @else {
+        <div class="estado vazio">
+          <span>Alocação não encontrada.</span>
+        </div>
+      }
+    }
+  }
+</div>

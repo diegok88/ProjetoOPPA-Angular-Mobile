@@ -1,0 +1,134 @@
+<div class="login-shell">
+  <!-- HEADER compacto -->
+  <header class="header">
+    <img class="header-logo" src="images/logoOPPA-1.png" alt="logo" />
+  </header>
+
+  <!-- CONTEÚDO -->
+  <main class="main">
+    <div class="card-logo">
+      <img class="logo-img" src="images/logoOPPA-2.png" alt="Logo OPPA" loading="eager" />
+    </div>
+
+    <form class="login-form" (ngSubmit)="onSubmit($event)" novalidate>
+      <h2 class="form-title">Acesse sua conta</h2>
+
+      <div class="fields">
+        <!-- CRACHÁ -->
+        <div class="field" [class.has-error]="crachaInvalido() || crachaVazio()">
+          <label class="field-label" for="cracha">Crachá</label>
+          <div class="field-control">
+            <app-icones-svg class="field-icon" nome="badge" />
+            <input
+              id="cracha"
+              name="cracha"
+              type="text"
+              placeholder="Insira o seu crachá"
+              [ngModel]="loginModel().cracha"
+              (ngModelChange)="onInput('cracha', $event)"
+              (blur)="onBlur('cracha')"
+              inputmode="numeric"
+              maxlength="5"
+              autocomplete="off"
+              [attr.aria-invalid]="crachaInvalido() || crachaVazio()"
+            />
+          </div>
+
+          <div class="field-erro">
+            @if (crachaInvalido()) {
+              <span class="erro-campo">Apenas números são permitidos</span>
+            }
+            @if (crachaVazio()) {
+              <span class="erro-campo">O crachá é obrigatório</span>
+            }
+          </div>
+        </div>
+
+        <!-- SENHA -->
+        <div class="field" [class.has-error]="senhaVazia()">
+          <label class="field-label" for="senha">Senha</label>
+          <div class="field-control">
+            <app-icones-svg class="field-icon" nome="pin" />
+            <input
+              id="senha"
+              name="senha"
+              [type]="hide() ? 'password' : 'text'"
+              placeholder="Insira a sua senha"
+              [ngModel]="loginModel().senha"
+              (ngModelChange)="onInput('senha', $event)"
+              (blur)="onBlur('senha')"
+              autocomplete="current-password"
+              [attr.aria-invalid]="senhaVazia()"
+            />
+            <button
+              class="toggle-btn"
+              type="button"
+              (click)="alternarSenha($event)"
+              [attr.aria-label]="hide() ? 'Mostrar senha' : 'Ocultar senha'"
+              [attr.aria-pressed]="!hide()"
+            >
+              <app-icones-svg [nome]="hide() ? 'olho-fechado' : 'olho'" />
+            </button>
+          </div>
+
+          <div class="field-erro">
+            @if (senhaVazia()) {
+              <span class="erro-campo">A senha é obrigatória</span>
+            }
+          </div>
+        </div>
+
+        <!-- EMPRESA -->
+        <div class="field" [class.has-error]="empresaInvalida() || empresaVazia()">
+          <label class="field-label" for="codEmpresa">Empresa</label>
+          <div class="field-control">
+            <app-icones-svg class="field-icon" nome="empresa" />
+            <input
+              id="codEmpresa"
+              name="codEmpresa"
+              type="text"
+              placeholder="Insira o código da empresa"
+              [ngModel]="loginModel().codEmpresa"
+              (ngModelChange)="onInput('codEmpresa', $event)"
+              (blur)="onBlur('codEmpresa')"
+              inputmode="numeric"
+              maxlength="5"
+              autocomplete="off"
+              [attr.aria-invalid]="empresaInvalida() || empresaVazia()"
+            />
+          </div>
+
+          <div class="field-erro">
+            @if (empresaInvalida()) {
+              <span class="erro-campo">Apenas números são permitidos</span>
+            }
+            @if (empresaVazia()) {
+              <span class="erro-campo">O código da empresa é obrigatório</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="form-feedback">
+        @if (mensagemErro()) {
+          <p class="mensagem-erro" role="alert">{{ mensagemErro() }}</p>
+        }
+      </div>
+
+      <button
+        class="btn-enter"
+        type="submit"
+        [disabled]="carregando()"
+        [attr.aria-busy]="carregando()"
+      >
+        {{ carregando() ? 'Entrando...' : 'Entrar' }}
+      </button>
+    </form>
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer class="footer">
+    <img class="icon-brand" src="icons/at.png" alt="" aria-hidden="true" />
+    <p class="texto-footer">OPPA System. Todos os direitos reservados.</p>
+  </footer>
+</div>

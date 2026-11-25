@@ -1,0 +1,20 @@
+@use '@angular/material' as mat;
+
+:root {
+  @include mat.button-overrides(
+    (
+      filled-container-color: var(--color-action),
+      filled-label-text-color: var(--color-white),
+      filled-container-height: 48px,
+      filled-container-shape: var(--border-radius),
+      filled-horizontal-padding: 40px,
+      filled-icon-spacing: 8px,
+      filled-label-text-size: 16px,
+      filled-label-text-font: var(--font-primary),
+      //filled-state-layer-color: var(--color-white),
+      filled-ripple-color: var(--color-white),
+      filled-disabled-container-color: var(--color-action),
+      filled-disabled-label-text-color: var(--color-white),
+    )
+  );
+}

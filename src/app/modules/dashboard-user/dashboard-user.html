@@ -1,0 +1,106 @@
+<div class="layout">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-start">
+      <button
+        type="button"
+        class="icon-btn"
+        (click)="toggleMenu()"
+        [attr.aria-label]="menuAberto() ? 'Fechar menu' : 'Abrir menu'"
+        [attr.aria-expanded]="menuAberto()"
+        aria-controls="menu-principal"
+      >
+        <app-icones-svg [nome]="menuAberto() ? 'close' : 'menu'" />
+      </button>
+
+      <div class="header-logo">
+        <img class="logo" src="images/logoOPPA-1.png" alt="Logo OPPA" />
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <span class="badge">
+        <app-icones-svg nome="account_circle" />
+        <h3>{{ usuario()?.cracha }}</h3>
+      </span>
+
+      <button type="button" class="badge badge-btn" (click)="logout()">
+        <app-icones-svg nome="exit_to_app" />
+        <h3>Sair</h3>
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO -->
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer class="footer">
+    <p class="text-developed">Desenvolvido por DDK</p>
+  </footer>
+</div>
+
+<!-- BACKDROP DO MENU -->
+<div class="backdrop" [class.aberto]="menuAberto()" (click)="fecharMenu()" aria-hidden="true"></div>
+
+<!-- MENU SOBREPOSTO -->
+<aside
+  id="menu-principal"
+  class="sidenav"
+  [class.aberto]="menuAberto()"
+  [attr.aria-hidden]="!menuAberto()"
+>
+  <nav class="menu">
+    <ul>
+      @for (item of menuItens(); track item.chave ?? item.rotulo) {
+        @if (!item.children) {
+          <li>
+            <a
+              class="menu-link"
+              [routerLink]="['/dashboard-user', item.caminho]"
+              routerLinkActive="active"
+            >
+              <app-icones-svg class="nav-icon" [nome]="item.icone" />
+              <span class="nav-text">{{ item.rotulo }}</span>
+            </a>
+          </li>
+        } @else {
+          <li class="has-submenu">
+            <a
+              class="menu-link group"
+              href="javascript:void(0)"
+              (click)="onGrupoClick(item.chave, $event)"
+              [class.active-group]="activeSubmenu() === item.chave"
+              [attr.aria-expanded]="activeSubmenu() === item.chave"
+            >
+              <app-icones-svg class="nav-icon" [nome]="item.icone" />
+              <span class="nav-text">{{ item.rotulo }}</span>
+              <app-icones-svg
+                class="arrow"
+                nome="expand_more"
+                [class.rotated]="activeSubmenu() === item.chave"
+              />
+            </a>
+
+            <ul class="submenu" [class.open]="activeSubmenu() === item.chave">
+              @for (sub of item.children; track sub.rotulo) {
+                <li>
+                  <a
+                    class="menu-link sub"
+                    [routerLink]="['/dashboard-user', sub.caminho]"
+                    routerLinkActive="active"
+                  >
+                    <app-icones-svg class="nav-icon" [nome]="sub.icone" />
+                    <span class="nav-text">{{ sub.rotulo }}</span>
+                  </a>
+                </li>
+              }
+            </ul>
+          </li>
+        }
+      }
+    </ul>
+  </nav>
+</aside>

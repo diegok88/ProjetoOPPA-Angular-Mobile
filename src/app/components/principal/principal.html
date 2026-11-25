@@ -1,0 +1,101 @@
+<section class="principal">
+  <header class="principal-header">
+    <span class="principal-eyebrow">Principal</span>
+    <h1>Bem-vindo, {{ usuario()?.nome }}</h1>
+    <h1>Empresa: {{ usuario()?.desEmpresa }}</h1>
+    <h3>Informações rápidas</h3>
+  </header>
+
+  <div class="principal-grid">
+    <article class="card">
+      <div class="card-topo">
+        <span class="card-titulo">Mês atual</span>
+        <mat-icon fontSet="material-symbols-outlined">calendar_month</mat-icon>
+      </div>
+      <strong class="card-valor">{{ mesAtual }}</strong>
+    </article>
+
+    <article class="card">
+      <div class="card-topo">
+        <span class="card-titulo">Escala atual</span>
+        <mat-icon fontSet="material-symbols-outlined">schedule</mat-icon>
+      </div>
+      <strong class="card-valor">{{ escalaAtual()?.escala }}</strong>
+    </article>
+
+    <article class="card">
+      <div class="card-topo">
+        <span class="card-titulo">Eficiência acumulada</span>
+        <mat-icon fontSet="material-symbols-outlined">chart_data</mat-icon>
+      </div>
+      <strong class="card-valor">VALOR</strong>
+    </article>
+
+    <article class="card">
+      <div class="card-topo">
+        <span class="card-titulo">Faltas totais</span>
+        <mat-icon fontSet="material-symbols-outlined">chart_data</mat-icon>
+      </div>
+      <strong class="card-valor">VALOR</strong>
+    </article>
+
+    <article class="card">
+      <div class="card-topo">
+        <span class="card-titulo">Experiência</span>
+        <mat-icon fontSet="material-symbols-outlined">celebration</mat-icon>
+      </div>
+      <strong class="card-valor">{{ experiencia() }}</strong>
+    </article>
+
+    <article class="card">
+      <div class="card-topo">
+        <span class="card-titulo">Competência setorial</span>
+        <mat-icon fontSet="material-symbols-outlined">demography</mat-icon>
+      </div>
+      <strong class="card-valor">{{ contadorCompSet()?.total }}</strong>
+    </article>
+
+    <article class="card card-largo">
+      <div class="card-topo">
+        <span class="card-titulo">Informativo interno</span>
+        <mat-icon fontSet="material-symbols-outlined">list_alt</mat-icon>
+      </div>
+      <strong class="card-valor">VALOR</strong>
+    </article>
+
+    <article class="card card-largo">
+      <div class="card-topo">
+        <span class="card-titulo">Quadro de colaboradores</span>
+        <mat-icon fontSet="material-symbols-outlined">group</mat-icon>
+      </div>
+      <strong class="card-valor lista">
+        <span>Total de Colaboradores:</span><span>{{ contadorColaborador()?.total }}</span>
+      </strong>
+      <strong class="card-valor lista">
+        <span>Total de Penalidades:</span><span>{{ contadorColaborador()?.penalidades }}</span>
+      </strong>
+      <strong class="card-valor lista">
+        <span>Total de Dispensas:</span><span>{{ contadorColaborador()?.dispensas }}</span>
+      </strong>
+    </article>
+
+    <article class="card card-largo">
+      <div class="card-topo">
+        <span class="card-titulo">Quadro de ativos</span>
+        <mat-icon fontSet="material-symbols-outlined">precision_manufacturing</mat-icon>
+      </div>
+      <strong class="card-valor lista">
+        <span>Total de Ativos:</span><span>{{ totalAtivos() }}</span>
+      </strong>
+      <strong class="card-valor lista">
+        <span>Total de Alocados:</span><span>{{ contadorAtivos()?.alocado }}</span>
+      </strong>
+      <strong class="card-valor lista">
+        <span>Total de Disponíveis:</span><span>{{ contadorAtivos()?.disponivel }}</span>
+      </strong>
+      <strong class="card-valor lista">
+        <span>Total de Indisponíveis:</span><span>{{ contadorAtivos()?.indisponivel }}</span>
+      </strong>
+    </article>
+  </div>
+</section>

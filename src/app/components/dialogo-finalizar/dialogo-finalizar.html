@@ -1,0 +1,35 @@
+<section
+  class="modal-card"
+  role="alertdialog"
+  aria-modal="true"
+  aria-labelledby="finalizar-titulo"
+  aria-describedby="finalizar-mensagem"
+>
+  <div class="modal-container">
+    <header class="modal-header">
+      <img class="modal-image" [src]="data.icone" [alt]="data.titulo" />
+    </header>
+
+    <main class="modal-main">
+      <h2 id="finalizar-titulo">{{ data.titulo }}</h2>
+
+      @if (data.operacao || data.dados) {
+        <p class="modal-operacao">{{ data.operacao }} {{ data.dados }}</p>
+      }
+
+      <p id="finalizar-mensagem">{{ data.mensagem }}</p>
+
+      @if (data.erros?.length) {
+        <ul class="modal-erros">
+          @for (erro of data.erros; track erro) {
+            <li>{{ erro }}</li>
+          }
+        </ul>
+      }
+    </main>
+  </div>
+
+  <footer class="modal-footer">
+    <button matButton="filled" type="button" class="modal-btn" (click)="fechar()">OK</button>
+  </footer>
+</section>

@@ -1,0 +1,138 @@
+<section class="tela">
+  <header class="tela-topo">
+    <div class="tela-titulo">
+      <app-icones-svg nome="move_to_inbox" />
+      <div class="titulo-texto">
+        <h2>Recebidas</h2>
+        <p class="subtitulo">
+          {{ total() }} de hoje ({{ hoje }}) · página {{ pagina() }} de {{ totalPaginas() }}
+        </p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="icon-btn"
+      (click)="atualizar()"
+      [disabled]="carregando() || atualizando()"
+      aria-label="Atualizar"
+    >
+      <app-icones-svg nome="sync" />
+    </button>
+  </header>
+
+  <section class="filtros-card">
+    <div class="filtros">
+      <label class="campo">
+        <span class="campo-rotulo">Situação</span>
+        <span class="campo-controle">
+          <select [ngModel]="situacao()" (ngModelChange)="aoFiltrarSituacao($event)">
+            <option value="">Todas</option>
+            @for (opcao of situacoes; track opcao.valor) {
+              <option [value]="opcao.valor">{{ opcao.label }}</option>
+            }
+          </select>
+        </span>
+      </label>
+
+      <label class="campo">
+        <span class="campo-rotulo">Recorte</span>
+        <span class="campo-controle">
+          <select [ngModel]="desvios()" (ngModelChange)="aoFiltrarRecorte($event)">
+            @for (opcao of recortes; track opcao.valor) {
+              <option [value]="opcao.valor">{{ opcao.label }}</option>
+            }
+          </select>
+        </span>
+      </label>
+    </div>
+
+    <button type="button" class="limpar" (click)="limpar()" [disabled]="!temFiltro()">
+      Limpar filtros
+    </button>
+  </section>
+
+  @if (erro()) {
+    <p class="aviso aviso-erro" role="alert">{{ erro() }}</p>
+  }
+
+  <div class="lista">
+    @if (carregando() && !linhas().length) {
+      <p class="aviso">Carregando solicitações de hoje...</p>
+    } @else if (!linhas().length && !erro()) {
+      <p class="aviso">Nenhuma solicitação recebida hoje.</p>
+      @if (temFiltro()) {
+        <button type="button" class="limpar" (click)="limpar()">Limpar filtros</button>
+      }
+    } @else {
+      @for (linha of linhas(); track linha.id) {
+        <app-solicitacao-card
+          modo="recebidas"
+          [linha]="linha"
+          [ocupado]="processandoId() === linha.id"
+          (aceitar)="abrirResposta($event, 'ACEITAR')"
+          (recusar)="abrirResposta($event, 'RECUSAR')"
+        />
+      }
+    }
+  </div>
+
+  <footer class="paginacao">
+    <button
+      type="button"
+      class="paginacao-botao"
+      [disabled]="pagina() === 1 || carregando()"
+      (click)="irPara(-1)"
+      aria-label="Página anterior"
+    >
+      <app-icones-svg nome="expand_more" />
+    </button>
+
+    <span class="paginacao-info">Página {{ pagina() }} de {{ totalPaginas() }}</span>
+
+    <button
+      type="button"
+      class="paginacao-botao"
+      [disabled]="pagina() >= totalPaginas() || carregando()"
+      (click)="irPara(1)"
+      aria-label="Próxima página"
+    >
+      <app-icones-svg nome="expand_more" />
+    </button>
+  </footer>
+</section>
+
+@if (respondendo(); as alvo) {
+  <div class="modal-fundo" (click)="fecharResposta()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-titulo">{{ tituloModal() }}</h3>
+      <p class="modal-texto">
+        {{ alvo.solicitante?.nome ?? 'Colaborador' }} ·
+        {{ alvo.tipoSolicitacao?.descricao ?? 'Solicitação' }}
+      </p>
+
+      <textarea
+        class="modal-area"
+        placeholder="Observação (opcional)"
+        [ngModel]="observacao()"
+        (ngModelChange)="aoDigitarObservacao($event)"
+        [maxlength]="limiteObservacao"
+      ></textarea>
+      <p class="modal-contador">{{ observacao().length }}/{{ limiteObservacao }}</p>
+
+      <div class="modal-acoes">
+        <button type="button" class="modal-botao" (click)="fecharResposta()">Voltar</button>
+        <button
+          type="button"
+          class="modal-botao"
+          [class.modal-botao-sucesso]="acao() === 'ACEITAR'"
+          [class.modal-botao-perigo]="acao() === 'RECUSAR'"
+          [disabled]="processandoId() === alvo.id"
+          (click)="confirmarResposta()"
+        >
+          {{ processandoId() === alvo.id ? 'Enviando...' : 'Confirmar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

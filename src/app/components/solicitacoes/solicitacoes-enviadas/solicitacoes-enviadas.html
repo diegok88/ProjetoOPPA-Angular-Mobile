@@ -1,0 +1,126 @@
+<section class="tela">
+  <header class="tela-topo">
+    <div class="tela-titulo">
+      <app-icones-svg nome="outbox" />
+      <div class="titulo-texto">
+        <h2>Enviadas</h2>
+        <p class="subtitulo">
+          {{ total() }} de hoje ({{ hoje }}) · página {{ pagina() }} de {{ totalPaginas() }}
+        </p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="icon-btn"
+      (click)="atualizar()"
+      [disabled]="carregando() || atualizando()"
+      aria-label="Atualizar"
+    >
+      <app-icones-svg nome="sync" />
+    </button>
+  </header>
+
+  <section class="filtros-card">
+    <div class="filtros">
+      <label class="campo">
+        <span class="campo-rotulo">Situação</span>
+        <span class="campo-controle">
+          <select [ngModel]="situacao()" (ngModelChange)="aoFiltrarSituacao($event)">
+            <option value="">Todas</option>
+            @for (opcao of situacoes; track opcao.valor) {
+              <option [value]="opcao.valor">{{ opcao.label }}</option>
+            }
+          </select>
+        </span>
+      </label>
+
+      <label class="campo">
+        <span class="campo-rotulo">Recorte</span>
+        <span class="campo-controle">
+          <select [ngModel]="desvios()" (ngModelChange)="aoFiltrarRecorte($event)">
+            @for (opcao of recortes; track opcao.valor) {
+              <option [value]="opcao.valor">{{ opcao.label }}</option>
+            }
+          </select>
+        </span>
+      </label>
+    </div>
+
+    <button type="button" class="limpar" (click)="limpar()" [disabled]="!temFiltro()">
+      Limpar filtros
+    </button>
+  </section>
+
+  @if (erro()) {
+    <p class="aviso aviso-erro" role="alert">{{ erro() }}</p>
+  }
+
+  <div class="lista">
+    @if (carregando() && !linhas().length) {
+      <p class="aviso">Carregando solicitações de hoje...</p>
+    } @else if (!linhas().length && !erro()) {
+      <p class="aviso">Nenhuma solicitação enviada hoje.</p>
+      @if (temFiltro()) {
+        <button type="button" class="limpar" (click)="limpar()">Limpar filtros</button>
+      }
+    } @else {
+      @for (linha of linhas(); track linha.id) {
+        <app-solicitacao-card
+          modo="enviadas"
+          [linha]="linha"
+          [ocupado]="processandoId() === linha.id"
+          (cancelar)="pedirCancelamento($event)"
+        />
+      }
+    }
+  </div>
+
+  <footer class="paginacao">
+    <button
+      type="button"
+      class="paginacao-botao"
+      [disabled]="pagina() === 1 || carregando()"
+      (click)="irPara(-1)"
+      aria-label="Página anterior"
+    >
+      <app-icones-svg nome="expand_more" />
+    </button>
+
+    <span class="paginacao-info">Página {{ pagina() }} de {{ totalPaginas() }}</span>
+
+    <button
+      type="button"
+      class="paginacao-botao"
+      [disabled]="pagina() >= totalPaginas() || carregando()"
+      (click)="irPara(1)"
+      aria-label="Próxima página"
+    >
+      <app-icones-svg nome="expand_more" />
+    </button>
+  </footer>
+</section>
+
+@if (confirmando(); as alvo) {
+  <div class="modal-fundo" (click)="fecharConfirmacao()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-titulo">Cancelar solicitação</h3>
+      <p class="modal-texto">
+        A solicitação de {{ alvo.tipoSolicitacao?.descricao ?? 'atendimento' }} será cancelada e não
+        poderá ser respondida.
+      </p>
+
+      <div class="modal-acoes">
+        <button type="button" class="modal-botao" (click)="fecharConfirmacao()">Voltar</button>
+        <button
+          type="button"
+          class="modal-botao modal-botao-perigo"
+          [disabled]="processandoId() === alvo.id"
+          (click)="confirmarCancelamento()"
+        >
+          {{ processandoId() === alvo.id ? 'Cancelando...' : 'Cancelar solicitação' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

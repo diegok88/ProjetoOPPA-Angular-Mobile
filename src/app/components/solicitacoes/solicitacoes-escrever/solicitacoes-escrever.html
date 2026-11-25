@@ -1,0 +1,91 @@
+<section class="tela">
+  <header class="tela-topo">
+    <app-icones-svg nome="editar" aria-hidden="true" />
+    <div class="titulo-texto">
+      <h2>Nova solicitação</h2>
+      <p class="subtitulo">A solicitação é registrada com a data de hoje</p>
+    </div>
+  </header>
+
+  <form class="formulario" (ngSubmit)="enviar($event)" novalidate>
+    <div class="campo" [class.campo-erro]="tagInvalida()">
+      <label class="campo-rotulo" for="tag">Ativo</label>
+
+      <div class="campo-controle">
+        <app-icones-svg nome="sell" aria-hidden="true" />
+
+        <select
+          id="tag"
+          name="tag"
+          [ngModel]="tagId()"
+          (ngModelChange)="aoSelecionarTag($event)"
+          [disabled]="carregando() || tagUnica() || (falhou() && !tags().length)"
+          [attr.aria-invalid]="tagInvalida() || falhou()"
+          aria-describedby="tag-apoio"
+        >
+          @if (carregando()) {
+            <option value="">Carregando ativos...</option>
+          } @else if (falhou()) {
+            <option value="">Falha ao carregar ativos</option>
+          } @else if (!tags().length) {
+            <option value="">Nenhum ativo alocado</option>
+          } @else {
+            <option value="">Selecione</option>
+            @for (tag of tags(); track tag.id) {
+              <option [value]="tag.id">{{ rotuloTag(tag) }}</option>
+            }
+          }
+        </select>
+      </div>
+
+      <div class="campo-erro-slot" id="tag-apoio">
+        @if (tagInvalida()) {
+          <span class="erro-campo" role="alert">Selecione o ativo</span>
+        } @else if (falhou()) {
+          <span class="erro-campo">Não foi possível carregar seus ativos</span>
+        } @else if (tagSelecionada(); as tag) {
+          <span class="dica-campo">{{ detalheTag(tag) }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="campo">
+      <label class="campo-rotulo" for="observacao">Observação</label>
+
+      <textarea
+        id="observacao"
+        name="observacao"
+        class="campo-area"
+        placeholder="Descreva o que precisa"
+        [ngModel]="observacao()"
+        (ngModelChange)="aoDigitarObservacao($event)"
+        [maxlength]="limiteObservacao"
+      ></textarea>
+
+      <p class="contador">{{ observacao().length }}/{{ limiteObservacao }}</p>
+    </div>
+
+    @if (falhou()) {
+      <div class="aviso aviso-info" role="status">
+        <span>Não foi possível carregar seus ativos.</span>
+        <button type="button" class="link-acao" (click)="recarregar()">Tentar novamente</button>
+      </div>
+    }
+
+    <div class="retorno">
+      @if (erro()) {
+        <p class="aviso aviso-erro" role="alert">{{ erro() }}</p>
+      }
+    </div>
+
+    <button
+      class="btn-enviar"
+      type="submit"
+      [disabled]="!podeEnviar() || carregando()"
+      [attr.aria-busy]="enviando()"
+    >
+      <app-icones-svg nome="adicionar" aria-hidden="true" />
+      {{ rotuloBotao() }}
+    </button>
+  </form>
+</section>

@@ -1,0 +1,383 @@
+:host {
+  --bg: #03396c;
+  --surface: #0f4275;
+  --border: rgba(255, 255, 255, 0.18);
+  --text: #e0e8e6;
+  --muted: rgba(255, 255, 255, 0.7);
+  --primary: #2196f3;
+  --icon: #5fb0ff;
+
+  /* sombras suaves — mesmo padrão do tablet */
+  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.14);
+  --shadow-sheet: 0 4px 16px rgba(0, 0, 0, 0.22);
+
+  --gap: 0.75rem;
+  --tap: 44px;
+
+  display: block;
+  height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    'Roboto',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ========== SHELL ========== */
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  gap: var(--gap);
+  padding: calc(env(safe-area-inset-top, 0px) + 0.5rem) 1rem
+    calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
+}
+
+/* ========== HEADER ========== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 56px;
+  padding-bottom: 0.5rem;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.header-start {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.icon-btn {
+  width: var(--tap);
+  height: var(--tap);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
+
+  app-icones-svg {
+    font-size: 22px;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--icon);
+    outline-offset: 2px;
+  }
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+
+  .logo {
+    height: 26px;
+    width: auto;
+    display: block;
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 42vw;
+  padding: 0 0.6rem;
+  min-height: 34px;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+
+  app-icones-svg {
+    font-size: 18px;
+    color: var(--icon);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.badge-btn {
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.15s ease;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* ========== CONTEÚDO ========== */
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ========== RODAPÉ ========== */
+.footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--border);
+  box-shadow: none;
+
+  .text-developed {
+    margin: 0;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+}
+
+/* ========== BACKDROP ========== */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+
+  &.aberto {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* ========== MENU SOBREPOSTO ========== */
+.sidenav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  width: min(78vw, 300px);
+  height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: calc(env(safe-area-inset-top, 0px) + 0.5rem) 0.5rem
+    calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  box-shadow: var(--shadow-sheet);
+  transform: translateX(-100%);
+  transition: transform 0.28s ease;
+  overflow: hidden;
+
+  &.aberto {
+    transform: translateX(0);
+  }
+}
+
+.menu {
+  flex: 1;
+  min-height: 0;
+  padding: 0.25rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 0.2rem;
+  }
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: var(--tap);
+  padding: 0 0.75rem;
+  box-sizing: border-box;
+  border-radius: 10px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.15s ease;
+
+  app-icones-svg.nav-icon {
+    font-size: 20px;
+    color: var(--icon);
+    transition: color 0.15s ease;
+  }
+
+  app-icones-svg.arrow {
+    font-size: 18px;
+    margin-left: auto;
+    color: var(--icon);
+    transition: transform 0.25s ease;
+
+    &.rotated {
+      transform: rotate(180deg);
+    }
+  }
+
+  &:active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &.active,
+  &.active-group {
+    background: rgba(255, 255, 255, 0.16);
+    font-weight: 500;
+  }
+
+  /* ícone acompanha o item ativo */
+  &.active app-icones-svg.nav-icon,
+  &.active-group app-icones-svg.nav-icon {
+    color: var(--text);
+  }
+
+  &.sub {
+    min-height: 40px;
+    padding-left: 1.6rem;
+    font-size: 0.85rem;
+  }
+
+  .nav-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ícone dos subitens um pouco menor */
+.menu-link.sub app-icones-svg.nav-icon {
+  font-size: 17px;
+}
+
+.submenu {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease;
+
+  &.open {
+    max-height: 480px;
+    opacity: 1;
+  }
+}
+
+/* ========== CARDS DAS PÁGINAS FILHAS ==========
+   Reduz o sombreamento dos cards renderizados no router-outlet,
+   mantendo o mesmo aspecto do dashboard do tablet */
+.content ::ng-deep .card,
+.content ::ng-deep .container-main,
+.content ::ng-deep section[class*='card'],
+.content ::ng-deep article,
+.content ::ng-deep .panel,
+.content ::ng-deep .box {
+  box-shadow: var(--shadow-soft) !important;
+}
+
+/* Cards que já indicam estado (borda colorida) dispensam sombra */
+.content ::ng-deep .card[class*='produc'],
+.content ::ng-deep .card[class*='para'],
+.content ::ng-deep .card[class*='falh'] {
+  box-shadow: none !important;
+}
+
+/* Tabelas internas alinhadas ao padrão suave */
+.content ::ng-deep table,
+.content ::ng-deep .table-wrapper {
+  box-shadow: none;
+}
+
+/* ========== TELAS MUITO CURTAS ========== */
+@media (max-height: 560px) {
+  :host {
+    --gap: 0.4rem;
+  }
+
+  .header {
+    min-height: 48px;
+  }
+
+  .header-logo .logo {
+    height: 22px;
+  }
+}
+
+/* ========== CELULARES ESTREITOS ========== */
+@media (max-width: 340px) {
+  .layout {
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+  }
+
+  .badge h3 {
+    font-size: 0.7rem;
+  }
+
+  .sidenav {
+    width: min(84vw, 280px);
+  }
+}

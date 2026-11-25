@@ -1,0 +1,92 @@
+<div class="app">
+  <header class="appbar">
+    <button class="icon-btn" type="button" (click)="voltar()" aria-label="Voltar aos setores">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+
+    <div class="appbar-titulo">
+      <h1 class="appbar-title">{{ nomeSetor() }}</h1>
+      <span class="conexao" [class.conexao--off]="!conectado()">
+        <i class="dot"></i>
+        {{ conectado() ? 'Tempo real' : 'Reconectando…' }}
+      </span>
+    </div>
+
+    <button class="icon-btn" type="button" (click)="atualizar()" aria-label="Atualizar lista">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="23 4 23 10 17 10" />
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+      </svg>
+    </button>
+  </header>
+
+  <nav class="chips" aria-label="Resumo do setor">
+    <span class="chip chip--total">{{ resumo().total }} em execução</span>
+    <span class="chip chip--ok">{{ resumo().produzindo }} produzindo</span>
+    <span class="chip chip--warn">{{ resumo().parado }} parados</span>
+    <span class="chip chip--err">{{ resumo().falha }} falhas</span>
+  </nav>
+
+  @if (aviso(); as texto) {
+    <div class="aviso-conexao" role="status">
+      <span class="aviso-texto">{{ texto }}</span>
+      <button class="aviso-fechar" type="button" (click)="fecharAviso()" aria-label="Fechar aviso">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+  }
+
+  <main class="scroll" role="main">
+    @if (carregando() && !ativos().length) {
+      @for (i of [1, 2, 3]; track i) {
+        <div class="skeleton" aria-hidden="true"></div>
+      }
+    }
+
+    @if (vazio()) {
+      <div class="aviso">
+        <p>Nenhum ativo em execução neste setor.</p>
+        <button class="btn" type="button" (click)="atualizar()">Atualizar agora</button>
+      </div>
+    }
+
+    @if (ativos().length) {
+      @for (ativo of ativos(); track ativo.id) {
+        <app-card-estado-ativo
+          [titulo]="ativo.tagAtivo?.descricao || ativo.tagAtivoId"
+          [subtitulo]="ativo.tagAtivo ? 'Cód. ' + ativo.tagAtivo.codigo : null"
+          [estado]="ativo"
+          [tempo]="tempo(ativo)"
+          [online]="conectado()"
+          (selecionado)="abrirDetalhe($event)"
+        />
+      }
+    }
+  </main>
+</div>

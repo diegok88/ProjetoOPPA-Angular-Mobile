@@ -1,0 +1,79 @@
+<div class="app">
+  <header class="appbar">
+    <button class="icon-btn" type="button" (click)="voltar()" aria-label="Voltar ao painel">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+
+    <div class="appbar-titulo">
+      <p class="appbar-eyebrow">Estados dos Ativos</p>
+      <h1 class="appbar-title">Meus setores</h1>
+    </div>
+
+    <span class="badge" [attr.aria-label]="total() + ' setores'">{{ total() }}</span>
+  </header>
+
+  <main class="scroll" role="main">
+    @if (carregando()) {
+      @for (i of [1, 2, 3, 4, 5]; track i) {
+        <div class="skeleton" aria-hidden="true"></div>
+      }
+    }
+
+    @if (!carregando() && erro()) {
+      <div class="aviso">
+        <p>{{ erro() }}</p>
+        <button class="btn" type="button" (click)="carregar()">Tentar novamente</button>
+      </div>
+    }
+
+    @if (vazio()) {
+      <div class="aviso">
+        <p>Nenhum setor vinculado ao seu perfil.</p>
+        <button class="btn" type="button" (click)="carregar()">Atualizar</button>
+      </div>
+    }
+
+    @if (!carregando() && setores().length) {
+      @for (setor of setores(); track setor.setorId) {
+        <button class="setor" type="button" (click)="abrirSetor(setor)">
+          <span class="setor-codigo">{{ setor.codigo }}</span>
+
+          <span class="setor-texto">
+            <span class="setor-nome">{{ setor.descricao }}</span>
+            <span class="setor-meta">
+              {{ setor.totalAtivos }} em execução
+              @if (setor.falha) {
+                <em class="t-falha">· {{ setor.falha }} falha</em>
+              }
+              @if (setor.parado) {
+                <em class="t-parado">· {{ setor.parado }} parado</em>
+              }
+            </span>
+          </span>
+
+          <svg
+            class="chevron"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+      }
+    }
+  </main>
+</div>

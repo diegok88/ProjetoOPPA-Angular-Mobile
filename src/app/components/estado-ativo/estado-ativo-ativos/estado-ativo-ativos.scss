@@ -1,0 +1,316 @@
+:host {
+  --bg: #03396c;
+  --card: #011f4b;
+  --borda: rgba(255, 255, 255, 0.18);
+  --texto: #e0e8e6;
+  --muted: rgba(255, 255, 255, 0.7);
+  --producing: #00ff66;
+  --fail: #ff4444;
+  --stopped: #ffcc33;
+
+  --gap: 12px;
+  --pad-lat: 16px;
+
+  display: block;
+  block-size: 100dvh;
+  max-block-size: 100dvh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--texto);
+  font-family:
+    'Roboto',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+}
+
+/* ==================== APPBAR ==================== */
+.appbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px var(--pad-lat);
+  padding-block-start: calc(10px + env(safe-area-inset-top, 0px));
+  background: var(--bg);
+  border-block-end: 1px solid var(--borda);
+  z-index: 10;
+}
+
+.appbar-titulo {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.appbar-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conexao {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--producing);
+
+  &--off {
+    color: var(--stopped);
+  }
+}
+
+.dot {
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.icon-btn {
+  flex: 0 0 48px;
+  inline-size: 48px;
+  block-size: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: var(--texto);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--borda);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
+
+  svg {
+    inline-size: 20px;
+    block-size: 20px;
+  }
+
+  &:active {
+    background: rgba(255, 255, 255, 0.12);
+    transform: scale(0.94);
+  }
+}
+
+/* ==================== CHIPS (fixos, scroll horizontal) ==================== */
+.chips {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 10px var(--pad-lat);
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  block-size: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  scroll-snap-align: start;
+  border: 1px solid transparent;
+
+  &--total {
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--borda);
+  }
+
+  &--ok {
+    color: var(--producing);
+    background: rgba(0, 255, 102, 0.1);
+    border-color: rgba(0, 255, 102, 0.32);
+  }
+
+  &--warn {
+    color: var(--stopped);
+    background: rgba(255, 204, 51, 0.1);
+    border-color: rgba(255, 204, 51, 0.32);
+  }
+
+  &--err {
+    color: var(--fail);
+    background: rgba(255, 68, 68, 0.1);
+    border-color: rgba(255, 68, 68, 0.32);
+  }
+}
+
+/* ==================== ÁREA ROLÁVEL ==================== */
+.scroll {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  padding: 0 var(--pad-lat);
+  padding-block-end: calc(var(--gap) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ==================== ESTADOS ==================== */
+.skeleton {
+  block-size: 104px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #011f4b 25%, #0f4275 50%, #011f4b 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.aviso {
+  margin-block-start: 8px;
+  padding: 32px 18px;
+  text-align: center;
+  border-radius: 16px;
+  border: 1px dashed var(--borda);
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+
+  p {
+    margin: 0;
+  }
+}
+
+.btn {
+  margin-block-start: 14px;
+  min-block-size: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #04141f;
+  background: var(--producing);
+  border: 0;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ==================== ADAPTAÇÕES ==================== */
+@media (max-width: 360px) {
+  :host {
+    --pad-lat: 12px;
+    --gap: 10px;
+  }
+
+  .appbar-title {
+    font-size: 0.95rem;
+  }
+
+  .icon-btn {
+    flex-basis: 44px;
+    inline-size: 44px;
+    block-size: 44px;
+  }
+
+  .chip {
+    font-size: 0.68rem;
+    padding: 0 10px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 480px) {
+  .chips {
+    padding-block: 6px;
+  }
+
+  .icon-btn {
+    flex-basis: 42px;
+    inline-size: 42px;
+    block-size: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+
+/* ==================== CONEXÃO DO WEBSOCKET ==================== */
+.aviso-conexao {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 var(--pad-lat) 8px;
+  padding: 10px 10px 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 204, 51, 0.4);
+  border-inline-start: 3px solid var(--stopped);
+  background: rgba(255, 204, 51, 0.1);
+  color: var(--texto);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.aviso-texto {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.aviso-fechar {
+  flex: 0 0 32px;
+  inline-size: 32px;
+  block-size: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+
+  svg {
+    inline-size: 14px;
+    block-size: 14px;
+  }
+
+  &:active {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}

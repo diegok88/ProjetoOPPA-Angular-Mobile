@@ -1,0 +1,96 @@
+<article class="solicitacao" [class.pendente]="pendente()">
+  <header class="linha-topo">
+    <app-icones-svg class="icone" [nome]="modo() === 'recebidas' ? 'move_to_inbox' : 'outbox'" />
+
+    <div class="identidade">
+      <h3>{{ titulo() }}</h3>
+      <p class="pessoa">
+        {{ pessoa() }}
+        @if (cracha(); as numero) {
+          <span class="cracha">{{ numero }}</span>
+        }
+      </p>
+    </div>
+
+    <span class="situacao" [class]="'situacao-' + linha().situacao">
+      {{ rotulo() }}
+    </span>
+  </header>
+
+  <dl class="dados">
+    <div>
+      <dt>Enviada</dt>
+      <dd>{{ linha().dataEnvio | date: 'dd/MM HH:mm' }}</dd>
+    </div>
+
+    @if (ativo(); as ativoDescricao) {
+      <div>
+        <dt>Ativo</dt>
+        <dd>{{ ativoDescricao }}</dd>
+      </div>
+    }
+
+    @if (linha().dataResposta) {
+      <div>
+        <dt>Respondida</dt>
+        <dd>{{ linha().dataResposta | date: 'dd/MM HH:mm' }}</dd>
+      </div>
+    }
+  </dl>
+
+  @if (lida() && visualizadaEm(); as visto) {
+    <p class="marca-leitura">
+      <app-icones-svg nome="olho" />
+      <span>Visualizada em {{ visto | date: 'dd/MM HH:mm' }}</span>
+    </p>
+  }
+
+  @if (!lida() && modo() === 'recebidas' && pendente()) {
+    <p class="marca-leitura marca-nova">
+      <app-icones-svg nome="alerta" />
+      <span>Não visualizada</span>
+    </p>
+  }
+
+  @if (linha().observacao) {
+    <p class="observacao">{{ linha().observacao }}</p>
+  }
+
+  @if (podeCancelar()) {
+    <div class="acoes">
+      <button
+        type="button"
+        class="acao acao-neutra"
+        [disabled]="ocupado()"
+        (click)="cancelar.emit(linha())"
+      >
+        <app-icones-svg nome="cancelar" />
+        <span>Cancelar</span>
+      </button>
+    </div>
+  }
+
+  @if (podeResponder()) {
+    <div class="acoes">
+      <button
+        type="button"
+        class="acao acao-negativa"
+        [disabled]="ocupado()"
+        (click)="recusar.emit(linha())"
+      >
+        <app-icones-svg nome="erro" />
+        <span>Recusar</span>
+      </button>
+
+      <button
+        type="button"
+        class="acao acao-positiva"
+        [disabled]="ocupado()"
+        (click)="aceitar.emit(linha())"
+      >
+        <app-icones-svg nome="sucesso" />
+        <span>Aceitar</span>
+      </button>
+    </div>
+  }
+</article>

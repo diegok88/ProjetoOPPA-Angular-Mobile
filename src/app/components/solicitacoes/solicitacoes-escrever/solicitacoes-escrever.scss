@@ -1,0 +1,269 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.tela {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.tela-topo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-shrink: 0;
+
+  app-icones-svg {
+    font-size: 22px;
+    color: #5fb0ff;
+    flex-shrink: 0;
+  }
+}
+
+.titulo-texto {
+  min-width: 0;
+
+  h2 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+}
+
+.subtitulo {
+  margin: 0.1rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+
+  &.campo-erro .campo-controle,
+  &.campo-erro .campo-area {
+    border-color: #f44336;
+  }
+}
+
+.campo-rotulo {
+  padding-left: 1rem;
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.campo-controle {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  height: 50px;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 999px;
+
+  &:focus-within {
+    border-color: #2196f3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.22);
+  }
+
+  app-icones-svg {
+    font-size: 17px;
+    color: #5fb0ff;
+    flex-shrink: 0;
+  }
+
+  select {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #e0e8e6;
+    font-family: inherit;
+    font-size: 16px;
+    appearance: none;
+    color-scheme: dark;
+
+    &:disabled {
+      opacity: 0.6;
+    }
+  }
+
+  select option {
+    background: #011f4b;
+    color: #e0e8e6;
+  }
+}
+
+.campo-area {
+  width: 100%;
+  min-height: 92px;
+  padding: 0.7rem 0.95rem;
+  box-sizing: border-box;
+  resize: vertical;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 16px;
+  color: #e0e8e6;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.35;
+  outline: none;
+
+  &:focus {
+    border-color: #2196f3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.22);
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+}
+
+.contador {
+  margin: 0;
+  padding-right: 0.35rem;
+  text-align: right;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==================== SLOT DE APOIO / ERRO ==================== */
+
+.campo-erro-slot {
+  display: flex;
+  align-items: flex-start;
+  min-height: 34px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  overflow: hidden;
+}
+
+.erro-campo {
+  font-size: 0.74rem;
+  line-height: 1.25;
+  color: #ff8a80;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.dica-campo {
+  font-size: 0.72rem;
+  line-height: 1.25;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* ==================== AVISOS ==================== */
+
+.retorno {
+  min-height: 18px;
+}
+
+.aviso {
+  margin: 0;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.78rem;
+  border-radius: 12px;
+}
+
+.aviso-erro {
+  color: #ff8a80;
+  border: 1px solid rgba(244, 67, 54, 0.5);
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.aviso-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: #ffcc33;
+  border: 1px dashed rgba(255, 204, 51, 0.4);
+}
+
+.link-acao {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #5fb0ff;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ==================== BOTÃO ==================== */
+
+.btn-enviar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  width: 100%;
+  height: 52px;
+  padding: 0 1.25rem;
+  box-sizing: border-box;
+  margin-top: 0.2rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #5fb0ff 0%, #2d86e6 100%);
+
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+
+  cursor: pointer;
+  touch-action: manipulation;
+
+  app-icones-svg {
+    width: 19px;
+    height: 19px;
+    flex: 0 0 19px;
+    color: #ffffff;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.9;
+  }
+}

@@ -1,0 +1,119 @@
+<div class="competencia">
+  <header class="competencia-header">
+    @if (visao() !== 'inicial') {
+      <button type="button" class="icon-btn" (click)="voltar()" aria-label="Voltar">
+        <mat-icon fontSet="material-symbols-outlined">arrow_back</mat-icon>
+      </button>
+    }
+
+    <div class="competencia-titulo">
+      <h2>Competência Operacional</h2>
+
+      @switch (visao()) {
+        @case ('lista') {
+          <span>{{ tituloFiltro() }}</span>
+        }
+        @case ('detalhe') {
+          <span>Detalhes da competência</span>
+        }
+      }
+    </div>
+  </header>
+
+  @switch (visao()) {
+    @case ('inicial') {
+      <section class="cartoes" aria-label="Resumo das competências">
+        @for (cartao of cartoes; track cartao.chave) {
+          <button type="button" class="cartao" (click)="abrirFiltro(cartao.filtro)">
+            <mat-icon class="cartao-icone" fontSet="material-symbols-outlined">
+              {{ cartao.icone }}
+            </mat-icon>
+            <span class="cartao-titulo">{{ cartao.titulo }}</span>
+            <strong class="cartao-valor">{{ valorCartao(cartao) }}</strong>
+          </button>
+        }
+      </section>
+    }
+
+    @case ('lista') {
+      @if (carregando()) {
+        <div class="estado">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      } @else if (resultado().length) {
+        <ul class="lista">
+          @for (item of resultado(); track item.id) {
+            <li>
+              <button type="button" class="item" (click)="abrirDetalhe(item)">
+                <div class="item-topo">
+                  <strong>{{ item?.codigo }}</strong>
+                  <span class="badge" [ngClass]="classeStatus(item?.status)">
+                    {{ exibirStatus(item?.status) }}
+                  </span>
+                </div>
+
+                <span class="item-linha">
+                  {{ item?.operador?.nome }} - {{ item?.operador?.cracha }}
+                </span>
+
+                <span class="item-linha secundaria">
+                  {{ item?.ativo?.descricao }} - {{ item?.ativo?.modelo }}
+                </span>
+              </button>
+            </li>
+          }
+        </ul>
+
+        <nav class="paginacao" aria-label="Paginação">
+          <button
+            type="button"
+            (click)="irParaPagina(resultado() && 1 ? 0 : 0)"
+            [disabled]="true"
+            hidden
+          ></button>
+        </nav>
+      } @else {
+        <div class="estado vazio">
+          <img src="images/mystery.png" alt="" />
+          <span>Lista Vazia!</span>
+        </div>
+      }
+    }
+
+    @case ('detalhe') {
+      @if (selecionado(); as dado) {
+        <dl class="detalhe">
+          <div>
+            <dt>Código</dt>
+            <dd>{{ dado.codigo }}</dd>
+          </div>
+
+          <div>
+            <dt>Operador</dt>
+            <dd>{{ dado.operador?.nome }} - {{ dado.operador?.cracha }}</dd>
+          </div>
+
+          <div>
+            <dt>Ativo</dt>
+            <dd>{{ dado.ativo?.descricao }} - {{ dado.ativo?.modelo }}</dd>
+          </div>
+
+          <div>
+            <dt>Status</dt>
+            <dd>
+              <span class="badge" [ngClass]="classeStatus(dado.status)">
+                {{ exibirStatus(dado.status) }}
+              </span>
+            </dd>
+          </div>
+        </dl>
+
+        <p class="nota">Somente visualização</p>
+      } @else {
+        <div class="estado vazio">
+          <span>Competência não encontrada.</span>
+        </div>
+      }
+    }
+  }
+</div>

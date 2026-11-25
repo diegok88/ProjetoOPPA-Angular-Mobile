@@ -1,0 +1,44 @@
+<section
+  class="modal-card"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="confirmar-titulo"
+  aria-describedby="confirmar-mensagem"
+>
+  <div class="modal-container">
+    <header class="modal-header">
+      <img class="modal-image" [src]="data.icone" alt="" />
+    </header>
+
+    <main class="modal-main">
+      <h2 id="confirmar-titulo">{{ data.titulo }} {{ data.entidade | uppercase }}</h2>
+      <p id="confirmar-mensagem">{{ data.mensagem }} {{ data.entidade }} {{ data.dados }}?</p>
+    </main>
+  </div>
+
+  <footer class="modal-footer">
+    <button
+      type="button"
+      class="modal-btn modal-btn--secondary"
+      (click)="fecharModal('cancelado')"
+      [disabled]="carregando()"
+    >
+      Cancelar
+    </button>
+
+    <button
+      type="button"
+      class="modal-btn"
+      (click)="onConfirmar()"
+      [disabled]="carregando()"
+      [attr.aria-busy]="carregando()"
+    >
+      @if (carregando()) {
+        <span class="modal-spinner" aria-hidden="true"></span>
+        <span>Processando...</span>
+      } @else {
+        <span>Confirmar</span>
+      }
+    </button>
+  </footer>
+</section>

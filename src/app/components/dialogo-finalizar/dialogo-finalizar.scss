@@ -1,0 +1,15 @@
+.modal-operacao {
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.modal-erros {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.9rem;
+  color: #ffb4b4;
+  overflow-wrap: anywhere;
+}

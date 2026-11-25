@@ -1,0 +1,333 @@
+:host {
+  --bg: #03396c;
+  --card: #011f4b;
+  --borda: rgba(255, 255, 255, 0.18);
+  --texto: #e0e8e6;
+  --muted: rgba(255, 255, 255, 0.7);
+  --producing: #00ff66;
+  --fail: #ff4444;
+  --stopped: #ffcc33;
+
+  --gap: 12px;
+  --pad-lat: 16px;
+
+  display: block;
+  block-size: 100dvh;
+  max-block-size: 100dvh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--texto);
+  font-family:
+    'Roboto',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Shell: header fixo + área rolável */
+.app {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+}
+
+/* ==================== APPBAR ==================== */
+.appbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px var(--pad-lat);
+  padding-block-start: calc(12px + env(safe-area-inset-top, 0px));
+  background: var(--bg);
+  border-block-end: 1px solid var(--borda);
+  z-index: 10;
+}
+
+.appbar-titulo {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.appbar-eyebrow {
+  margin: 0 0 2px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--producing);
+}
+
+.appbar-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Alvo de toque: 48x48 mínimo */
+.icon-btn {
+  flex: 0 0 48px;
+  inline-size: 48px;
+  block-size: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: var(--texto);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--borda);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
+
+  svg {
+    inline-size: 20px;
+    block-size: 20px;
+  }
+
+  &:active {
+    background: rgba(255, 255, 255, 0.12);
+    transform: scale(0.94);
+  }
+}
+
+.badge {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  min-inline-size: 34px;
+  block-size: 34px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--producing);
+  background: rgba(0, 255, 102, 0.1);
+  border: 1px solid rgba(0, 255, 102, 0.35);
+}
+
+/* ==================== ÁREA ROLÁVEL ==================== */
+.scroll {
+  flex: 1 1 auto;
+  min-block-size: 0; /* essencial: sem isto o flex não permite overflow */
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain; /* não dispara pull-to-refresh */
+  padding: var(--gap) var(--pad-lat);
+  /* respiro para a barra de gestos do Android/iPhone */
+  padding-block-end: calc(var(--gap) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ==================== ITEM DE SETOR ==================== */
+.setor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  inline-size: 100%;
+  min-block-size: 72px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  text-align: start;
+  color: inherit;
+  background: var(--card);
+  border: 1px solid var(--borda);
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    transform 0.1s ease,
+    background 0.18s ease;
+
+  /* evita o card "pular" no iOS ao tocar */
+  -webkit-user-select: none;
+  user-select: none;
+
+  &:active {
+    transform: scale(0.985);
+    border-color: var(--producing);
+    background: #052a5c;
+  }
+}
+
+.setor-codigo {
+  flex: 0 0 46px;
+  inline-size: 46px;
+  block-size: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--producing);
+  background: rgba(0, 255, 102, 0.1);
+  border: 1px solid rgba(0, 255, 102, 0.3);
+}
+
+.setor-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1 1 auto;
+  min-inline-size: 0; /* permite o ellipsis funcionar dentro do flex */
+}
+
+.setor-nome {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.setor-meta {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  em {
+    font-style: normal;
+  }
+
+  .t-falha {
+    color: var(--fail);
+  }
+
+  .t-parado {
+    color: var(--stopped);
+  }
+}
+
+.chevron {
+  flex: 0 0 18px;
+  inline-size: 18px;
+  block-size: 18px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ==================== ESTADOS ==================== */
+.skeleton {
+  block-size: 72px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #011f4b 25%, #0f4275 50%, #011f4b 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.aviso {
+  margin-block-start: 8px;
+  padding: 28px 18px;
+  text-align: center;
+  border-radius: 16px;
+  border: 1px dashed var(--borda);
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+
+  p {
+    margin: 0;
+  }
+}
+
+.btn {
+  margin-block-start: 14px;
+  min-block-size: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #04141f;
+  background: var(--producing);
+  border: 0;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ==================== ADAPTAÇÕES ==================== */
+/* Telas estreitas (iPhone SE, Galaxy A0x) */
+@media (max-width: 360px) {
+  :host {
+    --pad-lat: 12px;
+    --gap: 10px;
+  }
+
+  .appbar-title {
+    font-size: 1.05rem;
+  }
+
+  .setor {
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .setor-codigo {
+    flex-basis: 42px;
+    inline-size: 42px;
+    block-size: 42px;
+  }
+
+  .setor-nome {
+    font-size: 0.9rem;
+  }
+}
+
+/* Paisagem: appbar compacto para sobrar altura */
+@media (orientation: landscape) and (max-height: 480px) {
+  .appbar {
+    padding-block: 6px;
+    padding-block-start: calc(6px + env(safe-area-inset-top, 0px));
+  }
+
+  .appbar-eyebrow {
+    display: none;
+  }
+
+  .icon-btn {
+    flex-basis: 42px;
+    inline-size: 42px;
+    block-size: 42px;
+  }
+
+  .setor {
+    min-block-size: 62px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+
+  .setor,
+  .icon-btn,
+  .btn {
+    transition: none;
+  }
+}
